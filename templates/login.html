@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+
+<body class="auth-page">
 
 <!-- Navbar -->
 <nav class="navbar">
@@ -21,37 +22,101 @@
         </div>
 
         <div class="nav-buttons">
-            <a href="{{ url_for('signup') }}" class="btn btn-primary shadow">Sign Up</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-outline">
+                Create Account
+            </a>
         </div>
     </div>
 </nav>
 
-<!-- Auth Section -->
-<main class="hero">
-    <div class="container">
-        <div class="hero-content" style="max-width: 400px; margin: auto;">
-            <h1 class="hero-title">Welcome back</h1>
+<!-- Auth Card -->
+<main style="padding-top: 80px;">
+<div class="auth-card">
 
-            <form method="POST" action="{{ url_for('login') }}">
-                <input type="email" name="email" placeholder="Email address" required>
+    <h2 class="auth-title">Welcome Back 👋</h2>
+    <p class="auth-sub">Continue your personalized roadmap</p>
 
-                <input type="password" name="password" placeholder="Password" required>
+    <!-- Error Message Area -->
+    <div id="errorBox" style="color:#dc2626; font-size:13px; text-align:center;"></div>
 
-                <button type="submit" class="btn btn-primary btn-lg shadow" style="width:100%;">
-                    Log In
-                </button>
-            </form>
+    <form method="POST" action="{{ url_for('login') }}">
 
-            <p style="margin-top: 16px; text-align:center;">
-                Don’t have an account?
-                <a href="{{ url_for('signup') }}">Sign up</a>
-            </p>
+        <div class="input-group">
+            <label>Email Address</label>
+            <input class="auth-input"
+                   type="email"
+                   name="email"
+                   placeholder="you@gmail.com"
+                   required>
         </div>
+
+        <div class="input-group">
+            <label>Password</label>
+
+            <div style="position:relative">
+                <input class="auth-input"
+                       id="pass"
+                       type="password"
+                       name="password"
+                       placeholder="••••••••"
+                       required>
+
+                <span onclick="togglePassword()"
+                      style="position:absolute; right:10px; top:9px;
+                             cursor:pointer; font-size:13px; color:#64748b;">
+                    Show
+                </span>
+            </div>
+        </div>
+
+        <!-- Remember Me -->
+        <label style="font-size:13px; display:flex; gap:6px; margin-top:6px;">
+            <input type="checkbox" name="remember">
+            Remember me
+        </label>
+
+        <button type="submit" class="auth-btn">
+            Log In to Dashboard
+        </button>
+
+    </form>
+
+    <div class="divider">OR</div>
+
+    <button class="google-btn">
+        <i data-lucide="chrome"></i>
+        Continue with Google
+    </button>
+
+    <div class="auth-links">
+        <a href="#">Forgot password?</a>
+        <a href="{{ url_for('signup') }}">New user? Sign up</a>
     </div>
+
+</div>
 </main>
 
 <script>
     lucide.createIcons();
+
+    // Show / Hide Password
+    function togglePassword(){
+        let p = document.getElementById("pass");
+        p.type = p.type === "password" ? "text" : "password";
+    }
+
+    // Example client-side validation demo
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function(e){
+        const email = form.email.value;
+        const pass  = form.password.value;
+
+        if(pass.length < 4){
+            e.preventDefault();
+            document.getElementById("errorBox").innerText =
+                "Password must be at least 4 characters";
+        }
+    });
 </script>
 
 </body>
