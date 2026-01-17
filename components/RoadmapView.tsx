@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { RoadmapStep } from '../types';
 
 interface RoadmapViewProps {
@@ -7,61 +7,94 @@ interface RoadmapViewProps {
 }
 
 const RoadmapView: React.FC<RoadmapViewProps> = ({ steps }) => {
+  const [completedTasks, setCompletedTasks] = useState<Record<string, boolean>>(() => {
+    const saved = localStorage.getItem('planify_tasks_v3');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('planify_tasks_v3', JSON.stringify(completedTasks));
+  }, [completedTasks]);
+
+  const toggleTask = (week: number, idx: number) => {
+    const key = `w${week}-t${idx}`;
+    setCompletedTasks(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const getWeekProgress = (step: RoadmapStep) => {
+    const total = step.tasks.length;
+    const done = step.tasks.filter((_, i) => completedTasks[`w${step.week}-t${i}`]).length;
+    return (done / total) * 100;
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-slate-900">Weekly Learning Roadmap</h2>
-        <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase tracking-widest">
-          AI Personalized
-        </div>
+    <div className="space-y-12 pb-20">
+      <div className="flex items-center gap-4 px-2">
+        <div className="w-1.5 h-10 bg-blue-600 rounded-full"></div>
+        <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Your Mastery Arc</h2>
       </div>
 
-      <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-        {steps.map((step, idx) => (
-          <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-            {/* Timeline Icon */}
-            <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 group-hover:bg-blue-600 transition-colors shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-              <span className="text-xs font-bold text-slate-500 group-hover:text-white">{step.week}</span>
-            </div>
+      <div className="space-y-8">
+        {steps.map((step, idx) => {
+          const progress = getWeekProgress(step);
+          const isCurrent = progress < 100 && (idx === 0 || getWeekProgress(steps[idx - 1]) === 100);
 
-            {/* Content Card */}
-            <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-200 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Week {step.week}</span>
-                <h4 className="text-lg font-bold text-slate-900">{step.topic}</h4>
-              </div>
-              <p className="text-sm text-slate-600 mb-4">{step.description}</p>
-              
-              <div className="space-y-4">
-                <div>
-                  <h5 className="text-xs font-bold text-slate-400 uppercase mb-2">Resources</h5>
-                  <ul className="space-y-1">
-                    {step.resources.map((res, i) => (
-                      <li key={i} className="text-sm text-blue-600 hover:underline cursor-pointer flex items-center gap-2">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        {res}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          return (
+            <div key={idx} className={`relative group transition-all duration-700 ${isCurrent ? 'scale-[1.02]' : 'opacity-80'}`}>
+              <div className={`p-10 rounded-[3rem] shadow-2xl border transition-all duration-500 
+                ${isCurrent 
+                  ? 'bg-white dark:bg-slate-900 border-blue-600/30 ring-4 ring-blue-600/5' 
+                  : 'bg-white/50 dark:bg-slate-900/50 border-slate-100 dark:border-slate-800'}`}>
                 
-                <div>
-                  <h5 className="text-xs font-bold text-slate-400 uppercase mb-2">Key Tasks</h5>
-                  <ul className="space-y-2">
-                    {step.tasks.map((task, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <input type="checkbox" className="mt-1 h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
-                        <span className="text-sm text-slate-700">{task}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex flex-col md:flex-row gap-10">
+                  <div className="shrink-0 flex flex-col items-center">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black mb-4 
+                      ${progress === 100 ? 'bg-green-500 text-white' : isCurrent ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                      {progress === 100 ? '✓' : `0${step.week}`}
+                    </div>
+                    <div className="h-full w-0.5 bg-slate-100 dark:bg-slate-800 rounded-full"></div>
+                  </div>
+
+                  <div className="flex-1 space-y-8">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                         <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{step.topic}</h3>
+                         <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{Math.round(progress)}% Done</span>
+                      </div>
+                      <p className="text-base text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">{step.description}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {step.tasks.map((task, tIdx) => {
+                        const isDone = completedTasks[`w${step.week}-t${tIdx}`];
+                        return (
+                          <button 
+                            key={tIdx} 
+                            onClick={() => toggleTask(step.week, tIdx)}
+                            className={`flex items-center gap-4 p-5 rounded-2xl border text-left transition-all 
+                              ${isDone ? 'bg-green-500/10 border-green-500/20' : 'bg-slate-50 dark:bg-slate-800/40 border-transparent hover:border-blue-500/20'}`}
+                          >
+                            <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 
+                              ${isDone ? 'bg-green-500 border-green-500' : 'border-slate-300 dark:border-slate-700'}`}>
+                              {isDone && <span className="text-white text-xs">✓</span>}
+                            </div>
+                            <span className={`text-sm font-bold ${isDone ? 'text-slate-400 line-through' : 'text-slate-700 dark:text-slate-200'}`}>{task}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-50 dark:border-slate-800 flex flex-wrap gap-2">
+                      {step.resources.map((res, i) => (
+                        <span key={i} className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full text-[9px] font-black text-slate-500 uppercase tracking-widest">{res}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

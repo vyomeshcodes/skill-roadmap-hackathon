@@ -8,11 +8,11 @@ interface AssessmentFormProps {
 }
 
 const AssessmentForm: React.FC<AssessmentFormProps> = ({ onSubmit }) => {
+  // Fix: Removed 'certificates' property as it is not defined in the UserProfile interface
   const [profile, setProfile] = useState<UserProfile>({
     name: '',
     goal: '',
     skills: [],
-    certificates: [],
     sector: Sector.HEALTHCARE,
     studyHoursPerDay: 2,
     level: SkillLevel.BEGINNER
