@@ -1,11 +1,15 @@
-<<<<<<< HEAD
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planify</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+ <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+
+
+
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -22,8 +26,9 @@
                 </div>
                 
                 <div class="nav-buttons">
-                    <a href="/api/login" class="btn btn-ghost">Log In</a>
-                    <a href="/api/login" class="btn btn-primary shadow">Sign Up</a>
+                    <a href="/login" class="btn btn-ghost">Log In</a>
+                    <a href="/signup" class="btn btn-primary shadow">Sign Up</a>
+
                 </div>
             </div>
         </nav>
@@ -52,10 +57,10 @@
                         </p>
 
                         <div class="cta-group">
-                            <a href="/api/login" class="btn btn-primary btn-lg shadow-lg">
+                            <a href="/signup" class="btn btn-primary btn-lg shadow-lg">
                                 Get Started Free
-                                <i data-lucide="arrow-right"></i>
                             </a>
+
                             <button class="btn btn-outline btn-lg">View Demo</button>
                         </div>
 
@@ -119,11 +124,4 @@
 
 
 
-=======
-.hero{
-  background: linear-gradient(to right,#2563eb,#3b82f6);
-  color:white;
-  padding:80px 20px;
-  text-align:center;
-}
->>>>>>> 5d6ded426e96d9b7778ce868d6e35842a164c633
+

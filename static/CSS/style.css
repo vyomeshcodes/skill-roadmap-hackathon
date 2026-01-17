@@ -349,3 +349,23 @@ body {
         transform: translateY(0);
     }
 }
+
+.auth-container {
+    width: 350px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #111;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.auth-container a {
+    color: #4f9cff;
+}
