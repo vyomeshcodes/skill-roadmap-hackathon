@@ -32,12 +32,25 @@ def init_db():
     conn.commit()
     conn.close()
 
+
+
 # ---------------- HELPERS ----------------
 
 def load_json(filename):
     path = os.path.join(DATA_DIR, filename)
-    with open(path, "r") as f:
-        return json.load(f)
+
+    if not os.path.exists(path):
+        return []
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            if not content:
+                return []
+            return json.loads(content)
+    except json.JSONDecodeError:
+        return []
+
 
 # ---------------- ROUTES ----------------
 

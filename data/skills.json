@@ -1,0 +1,19 @@
+{
+  "skills": [
+    {
+      "name": "Python",
+      "level": "Beginner",
+      "description": "Learn syntax, data structures, and basic scripting"
+    },
+    {
+      "name": "Web Development",
+      "level": "Intermediate",
+      "description": "HTML, CSS, JavaScript, and Flask"
+    },
+    {
+      "name": "AI Fundamentals",
+      "level": "Beginner",
+      "description": "Basic machine learning and prompt engineering"
+    }
+  ]
+}
