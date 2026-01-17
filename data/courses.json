@@ -1,0 +1,21 @@
+
+
+{
+  "courses": [
+    {
+      "title": "Python for Everybody",
+      "platform": "Coursera",
+      "link": "https://www.coursera.org"
+    },
+    {
+      "title": "Full Stack Web Dev",
+      "platform": "Udemy",
+      "link": "https://www.udemy.com"
+    },
+    {
+      "title": "Intro to AI",
+      "platform": "edX",
+      "link": "https://www.edx.org"
+    }
+  ]
+}
