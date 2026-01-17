@@ -1,0 +1,351 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-900: #0f172a;
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--slate-50);
+    color: var(--slate-900);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.nav-content {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    background: var(--primary);
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+    display: flex;
+    color: white;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--slate-600);
+}
+
+.btn-ghost:hover {
+    color: var(--primary);
+    background: var(--slate-100);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--slate-300);
+    color: var(--slate-900);
+}
+
+.btn-outline:hover {
+    background: var(--slate-100);
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.125rem;
+}
+
+.shadow { shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+.shadow-lg { box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.2); }
+
+/* Hero Section */
+.hero {
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+}
+
+.hero-grid {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: #dbeafe;
+    color: var(--primary);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.dot {
+    position: relative;
+    display: flex;
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+.ping {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 9999px;
+    background: #60a5fa;
+    opacity: 0.75;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.solid {
+    position: relative;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 9999px;
+    background: var(--primary);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #2563eb, #4f46e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-description {
+    font-size: 1.125rem;
+    color: var(--slate-600);
+    max-width: 32rem;
+}
+
+.cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.trust-indicators {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--slate-500);
+}
+
+.indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Visual Side */
+.hero-visual {
+    position: relative;
+}
+
+.glow-effect {
+    position: absolute;
+    inset: -1rem;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    border-radius: 1rem;
+    filter: blur(24px);
+    opacity: 0.2;
+}
+
+.dashboard-mock {
+    position: relative;
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.mock-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.mock-title {
+    height: 2rem;
+    width: 8rem;
+    background: var(--slate-100);
+    border-radius: 0.5rem;
+}
+
+.mock-avatar {
+    height: 2.5rem;
+    width: 2.5rem;
+    background: #dbeafe;
+    border-radius: 9999px;
+}
+
+.skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--slate-50);
+    border-radius: 0.75rem;
+    border: 1px solid #f1f5f9;
+}
+
+.skill-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skill-info {
+    flex: 1;
+}
+
+.skill-name {
+    height: 1rem;
+    width: 6rem;
+    background: var(--slate-200);
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 0.5rem;
+    background: var(--slate-200);
+    border-radius: 9999px;
+}
+
+.progress {
+    height: 100%;
+    border-radius: 9999px;
+}
+
+/* Colors & Helpers */
+.bg-blue { background: #dbeafe; color: #2563eb; }
+.bg-purple { background: #f3e8ff; color: #9333ea; }
+.bg-orange { background: #ffedd5; color: #ea580c; }
+.w-75 { width: 75%; }
+.w-45 { width: 45%; }
+.w-90 { width: 90%; }
+.text-green { color: #22c55e; }
+.text-blue { color: #3b82f6; }
+
+/* Animations */
+@keyframes ping {
+    75%, 100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+}
+
+.delay-200 { animation-delay: 200ms; }
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

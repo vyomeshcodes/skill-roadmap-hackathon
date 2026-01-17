@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planify</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <span class="logo-text">Planify</span>
+                </div>
+                
+                <div class="nav-buttons">
+                    <a href="/api/login" class="btn btn-ghost">Log In</a>
+                    <a href="/api/login" class="btn btn-primary shadow">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <!-- Left Column -->
+                    <div class="hero-content animate-fade-up">
+                        <div class="badge">
+                            <span class="dot">
+                                <span class="ping"></span>
+                                <span class="solid"></span>
+                            </span>
+                            AI-Powered Skill Tracking
+                        </div>
+
+                        <h1 class="hero-title">
+                            Master your <br>
+                            <span class="gradient-text">potential.</span>
+                        </h1>
+
+                        <p class="hero-description">
+                            The intelligent platform to track, analyze, and accelerate your professional growth. Visualize your skills gap and close it fast.
+                        </p>
+
+                        <div class="cta-group">
+                            <a href="/api/login" class="btn btn-primary btn-lg shadow-lg">
+                                Get Started Free
+                                <i data-lucide="arrow-right"></i>
+                            </a>
+                            <button class="btn btn-outline btn-lg">View Demo</button>
+                        </div>
+
+                        <div class="trust-indicators">
+                            <div class="indicator">
+                                <i data-lucide="check-circle-2" class="text-green"></i>
+                                <span>Free Forever Plan</span>
+                            </div>
+                            <div class="indicator">
+                                <i data-lucide="shield-check" class="text-blue"></i>
+                                <span>Secure Data</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="hero-visual animate-fade-up delay-200">
+                        <div class="glow-effect"></div>
+                        <div class="dashboard-mock">
+                            <div class="mock-header">
+                                <div class="mock-title"></div>
+                                <div class="mock-avatar"></div>
+                            </div>
+                            
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <div class="skill-icon bg-blue"><i data-lucide="zap"></i></div>
+                                    <div class="skill-info">
+                                        <div class="skill-name"></div>
+                                        <div class="progress-bar"><div class="progress w-75 bg-blue"></div></div>
+                                    </div>
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon bg-purple"><i data-lucide="zap"></i></div>
+                                    <div class="skill-info">
+                                        <div class="skill-name"></div>
+                                        <div class="progress-bar"><div class="progress w-45 bg-purple"></div></div>
+                                    </div>
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon bg-orange"><i data-lucide="zap"></i></div>
+                                    <div class="skill-info">
+                                        <div class="skill-name"></div>
+                                        <div class="progress-bar"><div class="progress w-90 bg-orange"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+
+
+
