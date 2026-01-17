@@ -1,143 +1,147 @@
-from flask import Flask, render_template, request, redirect, session, url_for, jsonify
-from flask_mail import Mail, Message
+from flask import Flask, render_template, request, redirect, session, url_for, flash
+import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import URLSafeTimedSerializer
-from twilio.rest import Client
-import random
+import json
+import os
 
-# -------------------- APP SETUP --------------------
 app = Flask(__name__)
-app.secret_key = "planify_secret_key"
+app.secret_key = "skill_roadmap_hackathon_secret"
 
-# -------------------- MAIL CONFIG --------------------
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "yourgmail@gmail.com"
-app.config["MAIL_PASSWORD"] = "your_gmail_app_password"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database.db")
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
-mail = Mail(app)
-serializer = URLSafeTimedSerializer(app.secret_key)
+# ---------------- DATABASE ----------------
 
-# -------------------- TWILIO CONFIG --------------------
-TWILIO_SID = "YOUR_TWILIO_SID"
-TWILIO_AUTH = "YOUR_TWILIO_AUTH"
-TWILIO_PHONE = "+1234567890"
+def get_db():
+    return sqlite3.connect(DB_PATH)
 
-twilio_client = Client(TWILIO_SID, TWILIO_AUTH)
-otp_store = {}
+def init_db():
+    conn = get_db()
+    cursor = conn.cursor()
 
-# -------------------- TEMP DATABASE --------------------
-users = {}  
-# Structure:
-# users[email] = {
-#     "password": hashed,
-#     "verified": True/False,
-#     "profile": {...},
-#     "roadmap": {...}
-# }
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
 
-# ======================================================
-# -------------------- ROUTES --------------------------
-# ======================================================
+    conn.commit()
+    conn.close()
+
+# ---------------- HELPERS ----------------
+
+def load_json(filename):
+    path = os.path.join(DATA_DIR, filename)
+    with open(path, "r") as f:
+        return json.load(f)
+
+# ---------------- ROUTES ----------------
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-# -------------------- SIGNUP --------------------
+# -------- AUTH --------
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    print("LOGIN ROUTE HIT:", request.method)
+
+    if request.method == "POST":
+        user_id = request.form.get("email")
+        password = request.form.get("password")
+
+        print("POST DATA:", user_id, password)
+
+        if not user_id or not password:
+            flash("All fields required")
+            return render_template("login.html")
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT password_hash FROM users WHERE user_id = ?",
+            (user_id,)
+        )
+        result = cursor.fetchone()
+        conn.close()
+
+        print("DB RESULT:", result)
+
+        if result and check_password_hash(result[0], password):
+            session["user"] = user_id
+            print("LOGIN SUCCESS:", user_id)
+            flash("Login successful!")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Invalid email or password")
+            return render_template("login.html")
+
+    return render_template("login.html")
+
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        email = request.form.get("email")
+        user_id = request.form.get("email")
         password = request.form.get("password")
-        confirm = request.form.get("confirm_password")
+        confirm_password = request.form.get("confirm_password")
 
-        if not email or not password or not confirm:
-            return render_template("signup.html",
-                                   error="All fields are required")
+        if not user_id or not password or not confirm_password:
+            flash("All fields required")
+            return render_template("signup.html")
 
-        if password != confirm:
-            return render_template("signup.html",
-                                   error="Passwords do not match")
+        if password != confirm_password:
+            flash("Passwords do not match")
+            return render_template("signup.html")
 
-        if email in users:
-            return render_template("signup.html",
-                                   error="User already exists")
+        password_hash = generate_password_hash(password)
 
-        users[email] = {
-            "password": generate_password_hash(password),
-            "verified": False,
-            "profile": None,
-            "roadmap": None
-        }
-
-        # Send verification email
-        token = serializer.dumps(email, salt="email-verify")
-        link = url_for("confirm_email", token=token, _external=True)
-
-        msg = Message(
-            subject="Verify your Planify account",
-            sender=app.config["MAIL_USERNAME"],
-            recipients=[email],
-            body=f"Click to verify your account:\n{link}"
-        )
-        mail.send(msg)
-
-        return render_template("login.html",
-                               success="Signup successful! Verify email to login.")
+        try:
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO users (user_id, password_hash) VALUES (?, ?)",
+                (user_id, password_hash)
+            )
+            conn.commit()
+            conn.close()
+            flash("Account created! Please log in.")
+            return redirect(url_for("login"))
+        except sqlite3.IntegrityError:
+            flash("Email already exists")
+            return render_template("signup.html")
 
     return render_template("signup.html")
 
-# -------------------- EMAIL CONFIRM --------------------
-@app.route("/confirm/<token>")
-def confirm_email(token):
-    try:
-        email = serializer.loads(token, salt="email-verify", max_age=3600)
 
-        if email in users:
-            users[email]["verified"] = True
-            return render_template("login.html",
-                                   success="Email verified! You can login.")
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
 
-        return "User not found", 404
+# -------- PROTECTED --------
 
-    except:
-        return "Verification link invalid or expired", 400
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect(url_for("login"))
 
-# -------------------- LOGIN --------------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "GET":
-        return render_template("login.html")
+    skills = load_json("skills.json")
+    courses = load_json("courses.json")
 
-    email = request.form.get("email")
-    password = request.form.get("password")
+    return render_template(
+        "dashboard.html",
+        user=session["user"],
+        skills=skills,
+        courses=courses
+    )
 
-    if email not in users:
-        return render_template("login.html",
-                               error="User not found")
 
-    user = users[email]
-
-    if not user["verified"]:
-        return render_template("login.html",
-                               error="Please verify your email first")
-
-    if not check_password_hash(user["password"], password):
-        return render_template("login.html",
-                               error="Invalid password")
-
-    # SUCCESS LOGIN
-    session["user"] = email
-
-    # If user already did assessment → dashboard
-    if user.get("roadmap"):
-        return redirect(url_for("dashboard"))
-    else:
-        return redirect(url_for("assessment"))
-
-# -------------------- ASSESSMENT PAGE --------------------
 @app.route("/assessment")
 def assessment():
     if "user" not in session:
@@ -145,99 +149,8 @@ def assessment():
 
     return render_template("assessment.html")
 
-# -------------------- ANALYZE ASSESSMENT (API) --------------------
-@app.route("/analyze", methods=["POST"])
-def analyze():
+# ---------------- MAIN ----------------
 
-    if "user" not in session:
-        return jsonify({"error": "not logged in"}), 401
-
-    data = request.get_json()
-
-    # Very simple gap logic (you can improve later)
-    skills = [s.strip().lower() for s in data.get("skills", [])]
-
-    required = {
-        "web": ["html", "css", "javascript"],
-        "ai": ["python", "ml", "math"],
-        "core": ["c", "dsa"]
-    }
-
-    sector = data.get("sector", "web")
-
-    needed = required.get(sector, [])
-    missing = [s for s in needed if s not in skills]
-
-    score = int(100 * (len(needed) - len(missing)) / max(1, len(needed)))
-
-    roadmap = {
-        "missing_skills": missing,
-        "score": score,
-        "message": f"You are {score}% ready for {sector}"
-    }
-
-    # Save to user
-    users[session["user"]]["profile"] = data
-    users[session["user"]]["roadmap"] = roadmap
-
-    return jsonify(roadmap)
-
-# -------------------- DASHBOARD --------------------
-@app.route("/dashboard")
-def dashboard():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    email = session["user"]
-    user = users.get(email)
-
-    return render_template(
-        "dashboard.html",
-        user=email,
-        roadmap=user.get("roadmap"),
-        profile=user.get("profile")
-    )
-
-# -------------------- LOGOUT --------------------
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("home"))
-
-# -------------------- SEND OTP --------------------
-@app.route("/send-otp", methods=["POST"])
-def send_otp():
-    phone = request.form.get("phone")
-    if not phone:
-        return "Phone number required", 400
-
-    otp = str(random.randint(100000, 999999))
-    otp_store[phone] = otp
-
-    twilio_client.messages.create(
-        body=f"Your Planify OTP is {otp}",
-        from_=TWILIO_PHONE,
-        to=phone
-    )
-
-    return redirect(url_for("verify_otp"))
-
-# -------------------- VERIFY OTP --------------------
-@app.route("/verify-otp", methods=["GET", "POST"])
-def verify_otp():
-    if request.method == "POST":
-        phone = request.form.get("phone")
-        otp = request.form.get("otp")
-
-        if otp_store.get(phone) == otp:
-            session["user"] = phone
-            otp_store.pop(phone)
-            return redirect(url_for("dashboard"))
-
-        return "Invalid OTP", 400
-
-    return render_template("verify_otp.html")
-
-# -------------------- RUN --------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    init_db()
+    app.run(debug=True, port=5004)
