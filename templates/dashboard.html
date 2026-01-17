@@ -3,80 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Dashboard</title>
-    
-    <!-- 1. External CSS File -->
+    <title>Dashboard | Planify</title>
+
+    <!-- Our Normal CSS Files Only -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css') }}">
-    
-    <!-- Tailwind CSS (Utility Classes) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Tailwind Configuration to match our design system
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        border: "var(--border)",
-                        input: "var(--input)",
-                        ring: "var(--ring)",
-                        background: "var(--background)",
-                        foreground: "var(--foreground)",
-                        primary: {
-                            DEFAULT: "var(--primary)",
-                            foreground: "var(--primary-foreground)",
-                        },
-                        secondary: {
-                            DEFAULT: "var(--secondary)",
-                            foreground: "var(--secondary-foreground)",
-                        },
-                        destructive: {
-                            DEFAULT: "var(--destructive)",
-                            foreground: "var(--destructive-foreground)",
-                        },
-                        muted: {
-                            DEFAULT: "var(--muted)",
-                            foreground: "var(--muted-foreground)",
-                        },
-                        accent: {
-                            DEFAULT: "var(--accent)",
-                            foreground: "var(--accent-foreground)",
-                        },
-                        card: {
-                            DEFAULT: "var(--card)",
-                            foreground: "var(--card-foreground)",
-                        },
-                    },
-                    borderRadius: {
-                        lg: "var(--radius)",
-                        md: "calc(var(--radius) - 2px)",
-                        sm: "calc(var(--radius) - 4px)",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        heading: ["Outfit", "sans-serif"],
-                    },
-                },
-            },
-        }
-    </script>
-    
-    <!-- React & Libraries (Frontend Frameworks) -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=Inter:wght@300..600&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- The Root Element where React will render the app -->
-    <div id="root"></div>
 
-    <!-- 2. Logic File (Loaded as Babel for JSX support) -->
-    <script type="text/babel" src="dashboard.js"></script>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container nav-content">
+
+    <span class="logo-text">Planify Dashboard</span>
+
+    <div>
+      <span id="userNameTop">Hi, Student</span>
+
+      <select id="navSelect">
+        <option>Account</option>
+        <option>Recent Updates</option>
+        <option>Skills</option>
+        <option>Courses</option>
+        <option>Projects</option>
+        <option>Certificates</option>
+        <option>Logout</option>
+      </select>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="container">
+
+  <h2 id="welcomeText">Welcome back!</h2>
+
+  <div class="grid">
+
+    <!-- Skills Card -->
+    <div class="card">
+      <h3>My Skills</h3>
+      <div id="skillList"></div>
+    </div>
+
+    <!-- Progress Card -->
+    <div class="card">
+      <h3>Roadmap Progress</h3>
+
+      <div class="progress-bar">
+        <div id="progressFill" class="progress"></div>
+      </div>
+
+      <span id="progressText">0%</span>
+    </div>
+
+    <!-- Sector Card -->
+    <div class="card">
+      <h3>Preferred Sector</h3>
+      <p id="sectorText">-</p>
+    </div>
+
+    <!-- Action Card -->
+    <div class="card">
+      <a href="/assessment" class="btn">Take Assessment</a>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ONLY PLAIN JAVASCRIPT -->
+<script src="{{ url_for('static', filename='JS/dashboard.js') }}"></script>
+
 </body>
 </html>
