@@ -30,7 +30,7 @@ Holistic Academic & Professional Skill Intelligence System
 - Stage 6: Presentation
 
 ##  Team
-- Bhavya Patel
+- Bhavy Patel
 - Nisarg Patel
 - Devam Patel
 - Vyomesh Patel
