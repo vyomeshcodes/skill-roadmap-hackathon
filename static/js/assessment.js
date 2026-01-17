@@ -2,13 +2,14 @@ document.getElementById("assessmentForm").addEventListener("submit", function(e)
 
  e.preventDefault();
 
- let userProfile = {
-   skills: skills.value.split(","),
-   certificates: certificates.value.split(","),
-   sector: sector.value,
-   hoursPerDay: hours.value,
-   level: level.value
- };
+let userProfile = {
+   skills: document.getElementById("skills").value.split(","),
+   certificates: document.getElementById("certificates").value.split(","),
+   sector: document.getElementById("sector").value,
+   hoursPerDay: document.getElementById("hours").value,
+   level: document.getElementById("level").value
+};
+
 
  localStorage.setItem("userProfile", JSON.stringify(userProfile));
 
