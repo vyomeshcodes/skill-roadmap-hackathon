@@ -1,3 +1,113 @@
+/* 
+   DASHBOARD STYLES (dashboard.css)
+   --------------------------------
+   This file handles all the visual styling for the dashboard.
+   It uses CSS Variables for easy theming (changing colors).
+*/
+
+:root {
+  /* --- COLOR PALETTE --- */
+  /* We use a professional Blue & White theme */
+  
+  --bg-color: #f8fafc;        /* Light Grey Background */
+  --text-dark: #0f172a;       /* Dark Blue-Black Text */
+  --text-muted: #64748b;      /* Muted Grey Text */
+  
+  --primary-blue: #2563EB;    /* Main Action Color */
+  --primary-hover: #1d4ed8;   /* Darker Blue for Hover */
+  
+  --card-bg: #ffffff;         /* White Cards */
+  --border-color: #e2e8f0;    /* Light Grey Borders */
+  
+  --success-bg: #dcfce7;      /* Light Green */
+  --success-text: #15803d;    /* Dark Green */
+  
+  --warning-bg: #fef9c3;      /* Light Yellow */
+  --warning-text: #a16207;    /* Dark Yellow */
+  
+  --radius: 12px;             /* Rounded Corners */
+}
+
+/* Base Settings */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  font-family: 'Inter', sans-serif; /* Clean modern font */
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Overrides */
+h1, h2, h3 {
+  font-family: 'Outfit', sans-serif; /* Stylish heading font */
+  margin: 0;
+}
+
+/* --- COMPONENT STYLES --- */
+
+/* 1. Cards (The white boxes) */
+.dashboard-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  /* Soft shadow for depth */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Lift effect on hover */
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+/* 2. Navigation Bar */
+.navbar {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px); /* Frosted glass effect */
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 3. Buttons */
+.btn {
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+/* 4. Progress Bar */
+.progress-track {
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: var(--primary-blue);
+  transition: width 1s ease-out; /* Smooth animation */
+}
+
+/* 5. Animations */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-entry {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
 .container{
   display:grid;
   grid-template-columns:1fr 1fr;
