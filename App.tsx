@@ -15,21 +15,23 @@ import Opportunities from './pages/Opportunities';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Assessment from './pages/Assessment';
-import { authService } from './services/authService';
+import { authService } from './pages/services/authService';
 import { User } from './types';
 
 // Auth Context
-const AuthContext = createContext<{
+export const AuthContext = createContext<{
   user: User | null;
   logout: () => void;
   loginSuccess: (user: User) => void;
+  refreshUser: () => void;
 }>({
   user: null,
   logout: () => {},
   loginSuccess: () => {},
+  refreshUser: () => {},
 });
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
@@ -49,7 +51,7 @@ const SidebarLink = ({ to, icon: Icon, label, active }: { to: string, icon: any,
   </Link>
 );
 
-const AppLayout = ({ children }: { children: React.ReactNode }) => {
+const AppLayout = ({ children }: { children?: React.ReactNode }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
@@ -136,8 +138,12 @@ export default function App() {
     setUser(null);
   };
 
+  const refreshUser = () => {
+    setUser(authService.getCurrentUser());
+  };
+
   return (
-    <AuthContext.Provider value={{ user, logout, loginSuccess }}>
+    <AuthContext.Provider value={{ user, logout, loginSuccess, refreshUser }}>
       <HashRouter>
         <AppLayout>
           <Routes>
