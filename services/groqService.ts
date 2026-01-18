@@ -2,7 +2,7 @@
 import { DomainType } from "../types";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.3-70b-versatile";
+const MODEL = "llama3-70b-8192";
 
 /**
  * Utility to safely parse JSON from the AI response.
@@ -71,6 +71,7 @@ export const generateRoadmap = async (domain: DomainType, currentSkills: string[
   const prompt = `Create a 5-step career roadmap for a specialist in ${domain}. 
     Current: ${currentSkills.join(', ')}. 
     Target Goal: ${goal}. 
+    Unique Generation ID: ${Date.now()}.
     Requirement: Return a JSON object with a key "roadmap" containing an array of 5 steps. 
     Each step must have "title", "description", "estimatedWeeks" (number), and "courseLink" (string).`;
 
@@ -100,7 +101,7 @@ export const generateQuizQuestions = async (domain: DomainType) => {
 export const aiRewritePortfolio = async (text: string) => {
   const content = await callGroq([
     { role: "system", content: "You are a professional resume writer. Rewrite text to be corporate and impactful. No emojis." },
-    { role: "user", content: `Rewrite: "${text}"` }
+    { role: "user", content: `Rewrite: "${text}" (Generation ID: ${Date.now()})` }
   ]);
   return content || text;
 };

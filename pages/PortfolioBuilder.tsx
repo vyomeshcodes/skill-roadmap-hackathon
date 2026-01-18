@@ -5,7 +5,7 @@ import {
   Plus, Trash2, FileText, Send, Sparkles, Download, 
   Eye, Layout, MousePointer2, Briefcase, User 
 } from 'lucide-react';
-import { aiRewritePortfolio } from '../services/geminiService';
+import { aiRewritePortfolio } from '../services/groqService';
 
 const PortfolioBuilder = () => {
   const [sections, setSections] = useState([

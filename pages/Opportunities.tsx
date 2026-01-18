@@ -50,9 +50,12 @@ const Opportunities = () => {
                   {job.company}
                 </p>
               </div>
-              <div className="p-3 bg-zinc-900 rounded-2xl text-blue-500 border border-zinc-800">
+              <button 
+                onClick={() => window.open(`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title)}&location=${encodeURIComponent(job.location)}`, '_blank')}
+                className="p-3 bg-zinc-900 rounded-2xl text-blue-500 border border-zinc-800 hover:bg-zinc-800 transition-colors"
+              >
                 <ExternalLink size={20} />
-              </div>
+              </button>
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8">
@@ -75,7 +78,10 @@ const Opportunities = () => {
                   <span key={tag} className="text-[10px] font-mono text-zinc-600 uppercase font-bold">{tag}</span>
                 ))}
               </div>
-              <button className="text-sm font-bold text-white group-hover:underline underline-offset-4 decoration-blue-500">
+              <button 
+                onClick={() => window.open(`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title)}&location=${encodeURIComponent(job.location)}`, '_blank')}
+                className="text-sm font-bold text-white group-hover:underline underline-offset-4 decoration-blue-500 hover:text-blue-400 transition-colors"
+              >
                 View Details
               </button>
             </div>

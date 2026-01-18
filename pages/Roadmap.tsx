@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Circle, Clock, Target, ExternalLink, Zap, Sparkles, Loader2 } from 'lucide-react';
 import { authService } from '../services/authService';
 import { userStore } from '../services/userStore';
-import { generateRoadmap } from '../services/geminiService';
+import { generateRoadmap } from '../services/groqService';
 
 const Roadmap = () => {
   const user = authService.getCurrentUser();
@@ -23,14 +23,16 @@ const Roadmap = () => {
     setLoading(true);
     try {
       const newSteps = await generateRoadmap(user.sector, user.skills, currentRoadmap?.goal || `Growth in ${user.sector}`);
-      setSteps(newSteps);
-      
-      const updatedUser = {
-        ...user,
-        roadmaps: [{ ...currentRoadmap, steps: newSteps, generatedAt: new Date().toISOString() }]
-      };
-      authService.updateUser(updatedUser);
-      userStore.saveProfile(updatedUser);
+      if (newSteps && newSteps.length > 0) {
+        setSteps(newSteps);
+        
+        const updatedUser = {
+          ...user,
+          roadmaps: [{ ...currentRoadmap, steps: newSteps, generatedAt: new Date().toISOString() }]
+        };
+        authService.updateUser(updatedUser);
+        userStore.saveProfile(updatedUser);
+      }
     } catch (e) {
       console.error(e);
     } finally {

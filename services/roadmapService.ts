@@ -1,11 +1,11 @@
 
 import { DomainType } from '../types';
-import { generateRoadmap as callGeminiRoadmap } from './geminiService';
+import { generateRoadmap as callGroqRoadmap } from './groqService';
 
 export const roadmapService = {
   generateRoadmap: async (skills: string[], sector: DomainType, goal: string) => {
     try {
-      const roadmap = await callGeminiRoadmap(sector, skills, goal);
+      const roadmap = await callGroqRoadmap(sector, skills, goal);
       return roadmap;
     } catch (error) {
       console.error('Roadmap generation failed, using fallback:', error);

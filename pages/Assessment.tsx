@@ -6,7 +6,7 @@ import { ArrowRight, ArrowLeft, Brain, Sparkles, X, Loader2, Target, Globe, Plus
 import { DomainType } from '../types';
 import { authService } from '../services/authService';
 import { userStore } from '../services/userStore';
-import { generateSkillAnalysis, generateRoadmap } from '../services/geminiService';
+import { generateSkillAnalysis, generateRoadmap } from '../services/groqService';
 import { AuthContext } from '../App';
 
 const SECTOR_SKILLS: Record<DomainType, string[]> = {

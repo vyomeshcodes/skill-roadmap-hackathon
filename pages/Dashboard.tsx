@@ -8,7 +8,7 @@ import {
 import { motion } from 'framer-motion';
 import { TrendingUp, Target, Award, Clock, ArrowUpRight, ArrowRight, Zap, ChevronRight, Bookmark, Sparkles } from 'lucide-react';
 import { DomainType } from '../types';
-import { generateSkillAnalysis } from '../services/geminiService';
+import { generateSkillAnalysis } from '../services/groqService';
 import { authService } from '../services/authService';
 
 const MOCK_RADAR = [
@@ -32,12 +32,14 @@ const Dashboard = () => {
     setIsLoading(true);
     try {
       const result = await generateSkillAnalysis(domain, `Profile: ${user.name}. Skills: ${user.skills.join(', ')}`);
-      setSkillData(result.skills);
-      const updatedRoadmaps = user.roadmaps || [];
-      if (updatedRoadmaps.length > 0) {
-        updatedRoadmaps[0] = { ...updatedRoadmaps[0], skillAnalysis: result.skills };
+      if (result && result.length > 0) {
+        setSkillData(result);
+        const updatedRoadmaps = user.roadmaps || [];
+        if (updatedRoadmaps.length > 0) {
+          updatedRoadmaps[0] = { ...updatedRoadmaps[0], skillAnalysis: result };
+        }
+        authService.updateUser({ ...user, roadmaps: updatedRoadmaps });
       }
-      authService.updateUser({ ...user, roadmaps: updatedRoadmaps });
     } catch (e) {
       console.error(e);
     } finally {

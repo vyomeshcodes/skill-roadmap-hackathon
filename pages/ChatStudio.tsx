@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, Bot, Sparkles, Phone, Video, MoreHorizontal, Zap } from 'lucide-react';
 import { DomainType, Message } from '../types';
-import { getMentorResponse } from '../services/geminiService';
+import { getMentorResponse } from '../services/groqService';
 
 const ChatStudio = () => {
   const [domain, setDomain] = useState<DomainType>(DomainType.HEALTHCARE_TECH);
