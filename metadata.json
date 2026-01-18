@@ -1,5 +1,8 @@
 {
-  "name": "Planify AI - Career Architect",
-  "description": "Professional-grade career intelligence platform using Gemini AI to analyze skill gaps and generate actionable mastery roadmaps.",
-  "requestFramePermissions": []
+  "name": "Stratum AI 2.0",
+  "description": "A world-class AI Career Intelligence platform designed for Healthcare Tech, AgriTech, and Smart City professionals. Featuring skill gap analysis, portfolio building, and AI mentorship.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
 }
