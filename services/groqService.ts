@@ -21,7 +21,6 @@ const safeJsonParse = (text: string | undefined, fallback: any = {}) => {
 
 /**
  * Standardized helper to call the Groq API.
- * Ensures the 'json_object' format is respected.
  */
 const callGroq = async (messages: any[], jsonMode: boolean = false) => {
   try {
@@ -35,7 +34,6 @@ const callGroq = async (messages: any[], jsonMode: boolean = false) => {
         model: MODEL,
         messages,
         temperature: 0.1 // Low temperature for consistent JSON
-        // response_format: jsonMode ? { type: "json_object" } : undefined  // Temporarily removed for compatibility
       })
     });
 
