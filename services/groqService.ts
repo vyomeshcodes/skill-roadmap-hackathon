@@ -2,7 +2,7 @@
 import { DomainType } from "../types";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "gemma-7b-it";
+const MODEL = "llama3-70b-8192";
 
 /**
  * Utility to safely parse JSON from the AI response.
