@@ -2,10 +2,30 @@
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
 import { DomainType } from "../types";
 
-// Initialize GoogleGenAI strictly using process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize GoogleGenAI only if an API key is provided.
+const API_KEY = process.env.API_KEY;
+let ai: any = null;
+if (API_KEY) {
+  ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+  console.warn('GoogleGenAI API key is missing. Using local fallbacks for AI calls.');
+}
 
 export const generateSkillAnalysis = async (domain: DomainType, userProfile: string) => {
+  if (!ai) {
+    // Fallback mock analysis when API key isn't available (e.g., running in browser)
+    return {
+      skills: [
+        { subject: 'Core Concepts', current: 45, required: 100 },
+        { subject: 'Platform Tooling', current: 40, required: 100 },
+        { subject: 'Domain Algorithms', current: 35, required: 100 },
+        { subject: 'Data Handling', current: 50, required: 100 },
+        { subject: 'Deployment', current: 30, required: 100 },
+        { subject: 'Security & Compliance', current: 25, required: 100 }
+      ]
+    } as any;
+  }
+
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Analyze the skill gap for a professional in ${domain}. 
@@ -37,6 +57,17 @@ export const generateSkillAnalysis = async (domain: DomainType, userProfile: str
 
 export const generateRoadmap = async (domain: DomainType, currentSkills: string[], goal: string) => {
   // Use gemini-3-pro-preview for high-reasoning tasks like roadmap architecture
+  if (!ai) {
+    // Return a deterministic fallback roadmap for client-side usage without secrets
+    return [
+      { title: 'Foundation & Concepts', description: `Understand core ${domain} concepts and tools.`, estimatedWeeks: 4, courseLink: 'https://www.coursera.org/' },
+      { title: 'Tooling & Workflows', description: 'Hands-on use of common platform tools and pipelines.', estimatedWeeks: 6, courseLink: 'https://www.udemy.com/' },
+      { title: 'Applied Projects', description: 'Build sector-specific projects to apply learning.', estimatedWeeks: 8, courseLink: 'https://www.edx.org/' },
+      { title: 'Architectural Patterns', description: 'Learn scalable system design patterns for the domain.', estimatedWeeks: 6, courseLink: 'https://www.coursera.org/' },
+      { title: 'Portfolio & Network', description: 'Polish portfolio, publish projects, and engage with mentors.', estimatedWeeks: 4, courseLink: 'https://www.linkedin.com/learning/' }
+    ];
+  }
+
   const response = await ai.models.generateContent({
     model: 'gemini-3-pro-preview',
     contents: `Act as a senior career architect in ${domain}. A specialist has these skills: ${currentSkills.join(', ')}. 
