@@ -2,7 +2,7 @@
 import { DomainType } from "../types";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama3-70b-8192";
+const MODEL = "llama3-8b-8192";
 
 /**
  * Utility to safely parse JSON from the AI response.
@@ -34,8 +34,8 @@ const callGroq = async (messages: any[], jsonMode: boolean = false) => {
       body: JSON.stringify({
         model: MODEL,
         messages,
-        temperature: 0.1, // Low temperature for consistent JSON
-        response_format: jsonMode ? { type: "json_object" } : undefined
+        temperature: 0.1 // Low temperature for consistent JSON
+        // response_format: jsonMode ? { type: "json_object" } : undefined  // Temporarily removed for compatibility
       })
     });
 
